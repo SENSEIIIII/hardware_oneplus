@@ -78,6 +78,7 @@ public class DeviceExtras extends PreferenceFragment
 
     public static final String KEY_TOUCHSCREEN_GESTURES = "touchscreen_gestures";
     public static final String KEY_GAME_SWITCH = "game_mode";
+    public static final String KEY_GAME_SWITCH_WARNING = "game_mode_warning";
     public static final String KEY_TP_EDGE_LIMIT_SWITCH = "tp_edge_limit";
 
     public static final String KEY_EAR_GAIN = "earpiece_gain";
@@ -218,7 +219,18 @@ public class DeviceExtras extends PreferenceFragment
             getPreferenceScreen().removePreference((Preference) findPreference(KEY_CATEGORY_FPS));
         }
 
+        boolean touchscreenSection = false;
+
+        // TouchScreen Gestures
+        touchscreenSection = touchscreenSection | isFeatureSupported(context, R.bool.config_deviceSupportsTouchScreenGestures);
+        if (isFeatureSupported(context, R.bool.config_deviceSupportsTouchScreenGestures)) {
+        }
+        else {
+            findPreference(KEY_TOUCHSCREEN_GESTURES ).setVisible(false);
+        }
+
         // Game Mode
+        touchscreenSection = touchscreenSection | isFeatureSupported(context, R.bool.config_deviceSupportsGameMode);
         if (isFeatureSupported(context, R.bool.config_deviceSupportsGameMode)) {
             mGameModeSwitch = (TwoStatePreference) findPreference(KEY_GAME_SWITCH);
             mGameModeSwitch.setEnabled(GameModeSwitch.isSupported(this.getContext()));
@@ -227,9 +239,11 @@ public class DeviceExtras extends PreferenceFragment
         }
         else {
            findPreference(KEY_GAME_SWITCH).setVisible(false);
+           findPreference(KEY_GAME_SWITCH_WARNING).setVisible(false);
         }
 
         // TP Edge Limit
+        touchscreenSection = touchscreenSection | isFeatureSupported(context, R.bool.config_deviceSupportsTPEdgeLimit);
         if (isFeatureSupported(context, R.bool.config_deviceSupportsTPEdgeLimit)) {
             mTPEdgeLimitModeSwitch = (TwoStatePreference) findPreference(KEY_TP_EDGE_LIMIT_SWITCH);
             mTPEdgeLimitModeSwitch.setEnabled(TPEdgeLimitModeSwitch.isSupported(this.getContext()));
@@ -240,8 +254,8 @@ public class DeviceExtras extends PreferenceFragment
            findPreference(KEY_TP_EDGE_LIMIT_SWITCH).setVisible(false);
         }
 
-        if (!isFeatureSupported(context, R.bool.config_deviceSupportsTouchScreenGestures)) {
-            getPreferenceScreen().removePreference((Preference) findPreference(KEY_TOUCHSCREEN_GESTURES));
+        if (!touchscreenSection) {
+            getPreferenceScreen().removePreference((Preference) findPreference(KEY_CATEGORY_TOUCHSCREEN));
         }
 
         boolean speakerSection = false;
