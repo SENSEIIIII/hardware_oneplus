@@ -1,0 +1,52 @@
+From 862c99ec0583a8bffff1c989bb84b13f0b62bf04 Mon Sep 17 00:00:00 2001
+From: Adithya R <gh0strider.2k18.reborn@gmail.com>
+Date: Tue, 16 Aug 2022 10:55:33 +0530
+Subject: [PATCH] x3: {parts,doze}: Cleanup unnecessary static libs
+
+Fixes an error in 13 regarding duplicate manifest properties.
+---
+ doze/Android.mk  | 5 +----
+ parts/Android.mk | 5 ++---
+ 2 files changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/doze/Android.mk b/doze/Android.mk
+index d5edccd..2ee4595 100644
+--- a/doze/Android.mk
++++ b/doze/Android.mk
+@@ -20,14 +20,11 @@ LOCAL_PRIVILEGED_MODULE := true
+ LOCAL_USE_AAPT2 := true
+ 
+ LOCAL_STATIC_ANDROID_LIBRARIES := \
+-    androidx.core_core \
+-    androidx.preference_preference
++    SettingsLib
+ 
+ LOCAL_RESOURCE_DIR := \
+     $(LOCAL_PATH)/res
+ 
+ LOCAL_PROGUARD_FLAG_FILES := proguard.flags
+ 
+-include frameworks/base/packages/SettingsLib/common.mk
+-
+ include $(BUILD_PACKAGE)
+diff --git a/parts/Android.mk b/parts/Android.mk
+index 3bdbe08..c22473c 100644
+--- a/parts/Android.mk
++++ b/parts/Android.mk
+@@ -27,8 +27,7 @@ LOCAL_PACKAGE_NAME := RealmeParts
+ LOCAL_USE_AAPT2 := true
+ 
+ LOCAL_STATIC_ANDROID_LIBRARIES := \
+-    androidx.core_core \
+-    androidx.preference_preference
++    SettingsLib
+ 
+ LOCAL_RESOURCE_DIR := \
+     $(LOCAL_PATH)/res \
+@@ -44,5 +43,5 @@ LOCAL_RESOURCE_DIR := $(package_resource_overlays) $(LOCAL_RESOURCE_DIR)
+ LOCAL_PROGUARD_ENABLED := optimization
+ LOCAL_PROGUARD_FLAG_FILES := proguard.flags
+ LOCAL_MODULE_TAGS := optional
+-include frameworks/base/packages/SettingsLib/common.mk
++
+ include $(BUILD_PACKAGE)
